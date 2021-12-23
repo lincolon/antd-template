@@ -1,0 +1,22 @@
+{
+    "name": "管理后台",
+    "theme": {
+        "@primary-color": "#2F80ED",
+        "@link-color": "#2F80ED",
+        "@background-color-base": "#F7F9FF", 
+        "@item-hover-bg": "#F7F9FF",
+        "@background-color-light": "#F7F9FF",
+        "@image-bg": "#F7F9FF",
+        "@input-placeholder-color": "#bcc6dd",
+        "@table-selected-row-bg": "#F7F9FF"
+    },
+    "production": {
+        "host": ""
+    },
+    "development": {
+        "host": "",
+        "server_port": "8899"
+    },
+    "token_name": "",
+    "page_size": 20
+}
