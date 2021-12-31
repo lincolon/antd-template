@@ -31,5 +31,6 @@ module.exports = merge(common, {
             },
             clearConsole: true,
         }),
+        new webpack.HotModuleReplacementPlugin()
     ]
 });

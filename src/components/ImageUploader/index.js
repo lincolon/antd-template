@@ -13,13 +13,13 @@ import './style.less';
 export default class extends PureComponent {
 
   state = {
-    fileList: this.props.file ? this.createImgsState(this.props.file) : []
+    fileList: this.props.value ? this.createImgsState(this.props.value) : []
   }
 
   componentDidUpdate(prevProps){
-    const { file } = this.props;
-    if(file && !isEqual(file, prevProps.file)){
-      this.setState({fileList: this.createImgsState(file)})
+    const { value } = this.props;
+    if(value && !isEqual(value, prevProps.value)){
+      this.setState({fileList: this.createImgsState(value)})
     }
   }
 
@@ -46,13 +46,6 @@ export default class extends PureComponent {
     return res;
   }
 
-  formatUrl(picUrl){
-    if(picUrl.indexOf(imgCompressConfig.thumb) > -1){
-      return picUrl.replace(imgCompressConfig.thumb, '')
-    }
-    return picUrl
-  }
-
   formatFileList(fileList){
     return fileList.map(item => {
       if(item instanceof File){
@@ -60,7 +53,7 @@ export default class extends PureComponent {
       }
       return {
         ...item,
-        url: this.formatUrl(item.url)
+        url: item.url
       }
     })
   }
@@ -104,7 +97,7 @@ export default class extends PureComponent {
   }
 
   render(){
-    const { multiple, max } = this.props;
+    const { multiple } = this.props;
     const { fileList } = this.state;
     const imgUploaderProps = this.genImgsUploaderProps();
     const uploadButton = (
@@ -113,6 +106,7 @@ export default class extends PureComponent {
         <div className="antUploadText">添加图片</div>
       </div>
     );
+    const max = this.props.max || 1;
     return (
       <Upload
         listType="picture-card"
