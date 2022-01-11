@@ -16,12 +16,12 @@ export default class extends PureComponent {
     fileList: this.props.value ? this.createImgsState(this.props.value) : []
   }
 
-  componentDidUpdate(prevProps){
-    const { value } = this.props;
-    if(value && !isEqual(value, prevProps.value)){
-      this.setState({fileList: this.createImgsState(value)})
-    }
-  }
+  // componentDidUpdate(prevProps){
+  //   const { value } = this.props;
+  //   if(value && !isEqual(value, prevProps.value)){
+  //     this.setState({fileList: this.createImgsState(value)})
+  //   }
+  // }
 
   createImgsState(files) {
     const res = [];
@@ -65,7 +65,7 @@ export default class extends PureComponent {
       beforeUpload: (file)=>{
         const isLt = file.size / 1024 / 1024 < (limitSize || 0.5);
         if (!isLt) {
-          message.error(`图片大小不能超过${limitSize}M!`);
+          message.error(`图片大小不能超过${limitSize || 0.5}M!`);
         }else{
           file.url = window.URL.createObjectURL(file);
           this.setState((state) => {
@@ -107,6 +107,7 @@ export default class extends PureComponent {
       </div>
     );
     const max = this.props.max || 1;
+
     return (
       <Upload
         listType="picture-card"

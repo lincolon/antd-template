@@ -27,23 +27,13 @@ export function sleep(duration){
   })
 }
 
-export function paramsToUrl(params){
-  if(!params)return '';
-  if(!isPlainObject(params)){
-    throw new Error('路径参数必须是一个纯对象')                                                
+export function urlToObject(urlParams){
+  const entries = urlParams.entries();
+  const result = {};
+  for(const [key, value] of entries) { 
+    result[key] = value;
   }
-  return Object.keys(params).reduce((res, item, idx, arr) => {
-    let andOprator = idx === arr.length - 1 ? '' : '&';
-    if(Array.isArray(params[item])){
-      if(params[item].length > 1){
-        params[item] = params[item].join('\u200b');
-      }else{
-        params[item] = params[item][0] + '\u200b';
-      }
-    }
-    res+=`${item}=${params[item]}${andOprator}`;
-    return res;
-  }, '')
+  return result;
 }
 
 export function initialDatePickerValue(startTime, endTime){
