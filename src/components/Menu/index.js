@@ -60,13 +60,13 @@ function getSelectedKey(pathname, config) {
 
 const routesConfig = getMenuConfig(routes);
 
-export default function NavMenu() {
+export default function NavMenu({menuCollapsed}) {
 
   const { pathname } = useLocation();
 
-  const defaultSelectedKeys = getSelectedKey(pathname, routesConfig)
+  const defaultSelectedKeys = getSelectedKey(pathname, routesConfig);
 
-  const defaultOpenKeys = routesConfig.map(item => item.key);
+  const defaultOpenKeys = !menuCollapsed ? routesConfig.map(item => item.key) : [];
 
   const appendProps = isSmallMedia() ? {} : {expandIcon: () => null};
 
