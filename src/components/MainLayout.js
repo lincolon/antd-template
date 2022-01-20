@@ -7,7 +7,7 @@ import {
 
 import NavBar from './Menu';
 import TopHeader from './TopHeader'
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 
 const { Header, Sider, Content } = Layout;
 
@@ -15,6 +15,7 @@ const menuWidth = 254;
 function MainLayout() {
 
   const [ menuCollapsed, setMenuCollapsed ] = useState(false);
+  const navigate = useNavigate();
 
   const offsetLeft = menuCollapsed ? 80 : menuWidth;
   
@@ -34,7 +35,7 @@ function MainLayout() {
         }}
       >
         <section className="logoContainer">
-          <a onClick={() => {window.g_app._history.replace('/app/dashboard')}}>
+          <a onClick={() => {navigate('/dashboard', { replace: true })}}>
             <span className={`logo img-cover mgt-block`}></span>
           </a>
         </section>
