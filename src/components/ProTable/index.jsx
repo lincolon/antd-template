@@ -1,44 +1,123 @@
-import React, { useEffect, useRef } from 'react';
-import ProTable from '@ant-design/pro-table';
+import axios from 'axios';
+import { notification } from 'antd'
+import NProgress from 'nprogress';
+import Cookie from 'js-cookie';
+// import qs from 'qs';
 
-import { useSearchParams } from 'react-router-dom';
+import projectConfig from '../../project.config.json';
 
-import { urlToObject } from '../../utils/helper';
+const env = process.env.NODE_ENV === "development" ? "development" : "production"
+const hostApi = projectConfig[env].host;
 
-export default function Table(props){
+const requestQueen = {
+  data: [],
+  isLoading: function(url) {
+    return this.data.indexOf(url) > -1;
+  },
+  push: function(url) {
+    this.data.push(url)
+  },
+  remove: function(url){
+    const idx = this.data.indexOf(url);
+    if(idx > -1){
+      this.data.splice(idx, 1);
+    }
+  }
+}
 
-    const formRef = useRef();
+function createPostData(data, method){
+  let _data = data;
+  if(method.toUpperCase() === 'POST'){
+    _data = qs.stringify(_data);
+  }
+  return _data;
+}
 
-    let [searchParams, setSearchParams] = useSearchParams();
-    const searchFormValues = urlToObject(searchParams);
+function dataFormatter(data) {
+  if(!data)return {};
+  let res = data;
+  if(data['withFile']){
+    res = new FormData();
+    for(const k in data){
+      res.append(k, data[k])
+    }
+  }else if(data.pageSize){
+    res.page = data.current;
+    res.page_size = data.pageSize;
+    delete res.current;
+    delete res.pageSize;
+  }
+  return res
+}
 
-    if(searchFormValues.start_at){
-      searchFormValues.created_at = [searchFormValues.start_at, searchFormValues.end_at];
+export default function initRequest(){
+
+  axios.defaults.baseURL = hostApi;
+  axios.defaults.timeout = 60000;
+
+  axios.interceptors.request.use(function (config) {
+    // 在发送请求之前做些什么
+    const authorization = {};
+
+    if(config.url.indexOf('/login') === -1){
+      authorization["Authorization"] = Cookie.get(projectConfig.token_name)
     }
 
-    useEffect(() => {
-      formRef.current && formRef.current.setFieldsValue(searchFormValues);
-    }, []);
+    if(requestQueen.isLoading(config.url))return;
 
-    return <ProTable 
-            rowKey="id"
-            formRef={formRef}
-            onSubmit={(params) => {
-              setSearchParams({...params, page: searchFormValues.page || 1})
-            }}
-            onReset={() => {setSearchParams({page:1});formRef.current.resetFields()}}
-            search={{labelWidth: 'auto', span: 6}}
-            onChange={(pagination) => {
-              setSearchParams({...searchFormValues, page: pagination.current})
-            }}
-            pagination={{
-              pageSize: 20,
-              defaultCurrent: searchFormValues.page || 1,
-            }}
-            defaultSize="small"
-            {...props}
-            request={async (params = {}) => {
-              return await props.request({...params, current: searchFormValues.page || 1})
-            }}
-        />
+    requestQueen.push(config.url);
+    NProgress.start();
+
+    return {
+      ...config,
+      data: dataFormatter(config.data),
+      headers: {
+        common: {
+          ...config.headers.common,
+          ...authorization
+        },
+        post: {
+          'Content-Type': (!config.data || !config.data.withFile) ? 'application/json; charset=utf-8' : 'multipart/form-data; charset=utf-8'
+        }
+      }
+    };
+  });
+
+  axios.interceptors.response.use(function (response) {
+    // 2xx 范围内的状态码都会触发该函数。
+    // 对响应数据做点什么
+
+    const {code, msg} = response.data;
+    const { config, headers } = response;
+
+    if(headers['authorization']){
+      Cookie.set(projectConfig.token_name, headers['authorization'])
+    }
+   
+    requestQueen.remove(config.url);
+    NProgress.done();
+    
+    if(code === 402){
+      location.replace('/login');
+    } else if(code !== 0) {
+      notification.error({
+        message: msg
+      })
+      return Promise.reject({code, message: msg, url: config.url});
+    }
+
+    return {
+      success: true,
+      data: response.data.data,
+      total: response.data.page.total,
+      extra: response.data.extra
+    };
+  }, function (error) {
+    
+    NProgress.done();
+    if(error.url){
+      requestQueen.remove(config.url);
+    }
+    return Promise.reject(error);
+  });
 }

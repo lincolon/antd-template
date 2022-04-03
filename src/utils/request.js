@@ -6,42 +6,8 @@ import Cookie from 'js-cookie';
 
 import projectConfig from '../../project.config.json';
 
-const hostApi = projectConfig.development.host;
-
-// const genPostOptions = (function(){
-//   return function(options){
-
-//     let contentType = 'application/json; charset=utf-8';
-//     const { store: {defaultStore} } = getState();
-//     const storeId = defaultStore && defaultStore.id || 0;
-//     // console.log('body', options.body || {});
-//     if (!(options.body instanceof FormData)) {
-//       //普通请求
-//       // console.log(options.body, 'params');
-//       options.body = formatPostData(options.body);
-//       // console.log(options.body);
-//       if(options.body.store_id === undefined || !options.body.hasOwnProperty('store_id')){
-//         options.body.store_id = storeId;
-//         if(!options.body.hasOwnProperty("all")){
-//           options.body.all = storeId === 0;
-//         }
-//       }
-//     } else {
-//       //带文件请求
-//       if(!options.body.has('store_id')){
-//         options.body.append('store_id', storeId);
-//       }
-//       contentType = 'multipart/form-data; charset=utf-8';
-//     }
-
-//     options.headers = {
-//       Accept: 'application/json',
-//       'Content-Type': contentType,
-//       ...options.headers,
-//     };
-
-//   }
-// })()
+const env = process.env.NODE_ENV === "development" ? "development" : "production"
+const hostApi = projectConfig[env].host;
 
 const requestQueen = {
   data: [],
@@ -59,15 +25,8 @@ const requestQueen = {
   }
 }
 
-function createPostData(data, method){
-  let _data = data;
-  if(method.toUpperCase() === 'POST'){
-    _data = qs.stringify(_data);
-  }
-  return _data;
-}
-
 function dataFormatter(data) {
+  if(!data)return {};
   let res = data;
   if(data['withFile']){
     res = new FormData();
@@ -110,7 +69,7 @@ export default function initRequest(){
           ...authorization
         },
         post: {
-          'Content-Type': !config.data.withFile ? 'application/json; charset=utf-8' : 'multipart/form-data; charset=utf-8'
+          'Content-Type': (!config.data || !config.data.withFile) ? 'application/json; charset=utf-8' : 'multipart/form-data; charset=utf-8'
         }
       }
     };
@@ -136,7 +95,7 @@ export default function initRequest(){
       notification.error({
         message: msg
       })
-      return Promise.reject({code, message: msg});
+      return Promise.reject({code, message: msg, url: config.url});
     }
 
     return {
@@ -147,9 +106,10 @@ export default function initRequest(){
     };
   }, function (error) {
     
-    requestQueen.remove(config.url);
     NProgress.done();
-
+    if(error.url){
+      requestQueen.remove(config.url);
+    }
     return Promise.reject(error);
   });
 }
