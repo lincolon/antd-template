@@ -7,15 +7,16 @@ import {
 
 import NavBar from './Menu';
 import TopHeader from './TopHeader'
+import Logo from './Logo'
 import { Outlet, useNavigate } from 'react-router-dom';
 
 const { Header, Sider, Content } = Layout;
 
-const menuWidth = 254;
+const menuWidth = 180;
 function MainLayout() {
 
-  const [ menuCollapsed, setMenuCollapsed ] = useState(false);
   const navigate = useNavigate();
+  const [ menuCollapsed, setMenuCollapsed ] = useState(false);
 
   const offsetLeft = menuCollapsed ? 80 : menuWidth;
   
@@ -31,21 +32,16 @@ function MainLayout() {
           position: 'fixed', 
           left: 0, 
           zIndex: 110,
-          boxShadow: '3px 0px 10px 0px rgba(0,0,0,0.3)'
         }}
       >
-        <section className="logoContainer">
-          <a onClick={() => {navigate('/dashboard', { replace: true })}}>
-            <span className={`logo img-cover mgt-block`}></span>
-          </a>
-        </section>
+        <div style={{height: 54}}></div>
         <div id='side_menu'>
           <NavBar menuCollapsed={menuCollapsed}/>
         </div>
         <div className="trigger-wrapper" onClick={() => setMenuCollapsed(!menuCollapsed)}>
             <span className="trigger">
               {
-                menuCollapsed ? <MenuUnfoldOutlined style={{color: '#ffffffb8'}} /> : <MenuFoldOutlined style={{color: '#ffffffb8'}} />
+                menuCollapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />
               }
             </span>
         </div>
@@ -57,19 +53,20 @@ function MainLayout() {
       }}>
         <Header style={{
           position: 'fixed', 
-          background: '#3A434F', 
+          background: '#fff', 
           padding: 0, 
-          zIndex: 100, 
+          zIndex: 999, 
           width: '100%', 
           boxShadow: '0px 1px 3px 0px rgba(0,0,0,0.13)', 
           left: 0, 
-          paddingLeft: offsetLeft, 
+          // paddingLeft: offsetLeft, 
           height: 54,
           linHeight: 54,
           transition: 'padding-left 0.2s' 
         }}  
         >
           <section style={{position: 'relative', height: '100%', lineHeight: 1}}>
+            <Logo navigate={navigate}/>
             <TopHeader />
           </section>
         </Header>

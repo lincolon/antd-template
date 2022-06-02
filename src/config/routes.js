@@ -1,21 +1,15 @@
 import {
   DashboardOutlined,
   AppstoreOutlined,
-  TableOutlined,
-  ContactsOutlined,
-  GiftOutlined,
-  TeamOutlined,
-  PropertySafetyOutlined,
-  RadarChartOutlined,
+  CrownOutlined,
+  ProfileOutlined,
+  BranchesOutlined,
+  PayCircleOutlined,
   SettingOutlined,
 } from '@ant-design/icons'; 
 import { Spin } from 'antd';
 
 import React from 'react';
-
-import Dashboard from '@/pages/Dashboard'
-
-const lazy = React.lazy;
 
 function Loading(){
   return <div
@@ -37,198 +31,58 @@ function AsyncComponent({src}){
 
 const routes = [
   {
-    label: '控制面板',
-    path: 'dashboard',
+    label: '灾害点',
+    path: 'disaster-areas',
     icon: <DashboardOutlined />,
+    element: <AsyncComponent src="Disaster/areas" />,
+  },
+  {
+    label: '数据分析',
+    path: 'dashboard',
+    icon: <AppstoreOutlined />,
     element: <AsyncComponent src="Dashboard" />,
-    hideInNav: true
   },
   {
-    label: '商品管理',
-    path: 'products',
-    icon: <AppstoreOutlined />,
-    children: [
-      {
-        label: '商品详情',
-        path: 'details',
-        hideInNav: true,
-        element: <AsyncComponent src="Products/details" />,
-      },
-      {
-        label: '商品列表',
-        path: 'list',
-        element: <AsyncComponent src="Products/list" />,
-      },
-      {
-        label: 'SKU列表',
-        path: 'sku',
-        element: <AsyncComponent src="Products/sku" />,
-      }
-    ]
+    label: '灾害预测',
+    path: 'disaster-predict',
+    icon: <ProfileOutlined />,
+    element: <AsyncComponent src="Disaster/predict" />,
   },
   {
-    label: '订单管理',
-    path: 'order',
-    icon: <AppstoreOutlined />,
-    children: [
-      {
-        label: '订单列表',
-        path: 'list',
-        element: <AsyncComponent src="Products/list" />,
-      },
-    ]
-  },
-  {
-    label: '会员管理',
-    path: 'member',
-    icon: <AppstoreOutlined />,
-    children: [
-      {
-        label: '会员列表',
-        path: 'list',
-        element: <AsyncComponent src="Products/list" />,
-      },
-      {
-        label: '份数记录',
-        path: 'record',
-        element: <AsyncComponent src="Products/list" />,
-      },
-    ]
-  },
-  {
-    label: '会员配送',
-    path: 'express',
-    icon: <AppstoreOutlined />,
-    children: [
-      {
-        label: '配送计划',
-        path: 'list',
-        element: <AsyncComponent src="Products/list" />,
-      },
-      {
-        label: '计划明细',
-        path: 'details',
-        element: <AsyncComponent src="Products/list" />,
-      },
-    ]
-  },
-  {
-    label: '营销管理',
-    path: 'activity',
-    icon: <AppstoreOutlined />,
-    children: [
-      {
-        label: '卡劵列表',
-        path: 'tickets',
-        element: <AsyncComponent src="Products/list" />,
-      },
-      {
-        label: '卡券派发',
-        path: 'list',
-        element: <AsyncComponent src="Products/list" />,
-      },
-      {
-        label: '货品派发',
-        path: 'list',
-        element: <AsyncComponent src="Products/list" />,
-      },
-      {
-        label: '分享有礼',
-        path: 'share',
-        element: <AsyncComponent src="Products/list" />,
-      },
-    ]
-  },
-  {
-    label: '小区管理',
-    path: 'express',
-    icon: <AppstoreOutlined />,
-    children: [
-      {
-        label: '网点管理',
-        path: 'list',
-        element: <AsyncComponent src="Products/list" />,
-      },
-      {
-        label: '设备管理',
-        path: 'devices',
-        element: <AsyncComponent src="Products/list" />,
-      },
-      {
-        label: '合伙人管理',
-        path: 'list',
-        element: <AsyncComponent src="Products/list" />,
-      },
-      {
-        label: '设备事件',
-        path: 'device-events',
-        element: <AsyncComponent src="Products/list" />,
-      },
-      {
-        label: '网络记录',
-        path: 'list',
-        element: <AsyncComponent src="Products/list" />,
-      },
-    ]
-  },
-  {
-    label: '生产配货',
-    path: 'factory',
-    icon: <AppstoreOutlined />,
-    children: [
-      {
-        label: '生产计划',
-        path: 'plan',
-        element: <AsyncComponent src="Products/list" />,
-      },
-      {
-        label: '配送员管理',
-        path: 'express-man',
-        element: <AsyncComponent src="Products/list" />,
-      },
-      {
-        label: '配货记录',
-        path: 'express-record',
-        element: <AsyncComponent src="Products/list" />,
-      },
-    ]
-  },
-  {
-    label: '财务管理',
-    path: 'factory',
-    icon: <AppstoreOutlined />,
-    children: [
-      {
-        label: '合伙人结算',
-        path: 'list',
-        element: <AsyncComponent src="Products/list" />,
-      },
-      {
-        label: '订户返佣',
-        path: 'list',
-        element: <AsyncComponent src="Products/list" />,
-      },
-      {
-        label: '提现申请',
-        path: 'withdraw',
-        element: <AsyncComponent src="Products/list" />,
-      },
-    ]
+    label: '灾害预警',
+    path: 'disaster-warning',
+    icon: <ProfileOutlined />,
+    element: <AsyncComponent src="Disaster/warning" />,
   },
   {
     label: '系统管理',
     path: 'system',
-    icon: <AppstoreOutlined />,
+    icon: <SettingOutlined />,
     children: [
       {
-        label: '平台账号',
-        path: 'account',
-        element: <AsyncComponent src="Products/list" />,
+        label: '账号管理',
+        path: 'users',
+        element: <AsyncComponent src="System/employees" />,
       },
       {
         label: '角色管理',
         path: 'roles',
-        element: <AsyncComponent src="Products/list" />,
+        element: <AsyncComponent src="System/roles" />,
+      },
+      {
+        label: '单位管理',
+        path: 'department',
+        element: <AsyncComponent src="System/department" />,
+      },
+      {
+        label: '项目管理',
+        path: 'projects',
+        element: <AsyncComponent src="System/projects" />,
+      },
+      {
+        label: '项目数据',
+        path: 'projects-data',
+        element: <AsyncComponent src="System/projects-data" />,
       },
     ]
   },

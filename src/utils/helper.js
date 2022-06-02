@@ -1,4 +1,6 @@
-import {isPlainObject, isString } from 'lodash-es';
+import isString from 'lodash-es/isString';
+import debounce from 'lodash-es/debounce';
+import isPlainObject from 'lodash-es/isPlainObject';
 import moment from 'moment';
 
 export function isEmptyObject(obj){
@@ -27,7 +29,7 @@ export function sleep(duration){
   })
 }
 
-export function urlToObject(urlParams){
+export function parseUrlSearchParams(urlParams){
   const entries = urlParams.entries();
   const result = {};
   for(const [key, value] of entries) { 
@@ -36,15 +38,36 @@ export function urlToObject(urlParams){
   return result;
 }
 
-export function initialDatePickerValue(startTime, endTime){
-  if(!startTime || startTime === '' || startTime === undefined || startTime === 'undefined')return null;
-  const st = moment(parseInt(startTime*1000, 10)).format('YYYY-MM-DD HH:mm:ss');
-  const et = moment(parseInt(endTime*1000, 10)).format('YYYY-MM-DD HH:mm:ss')
-  return [
-    moment(st),
-    moment(et)
-  ]
+export function parseLocationSearch(search){
+  const res = {};
+  if(!search)return res;
+  search.substr(1).split('&').forEach(item => {
+    if(item && item.indexOf('=')){
+      const [k,v] = item.split("=");
+      res[k] = v;
+    }
+  })
+  return res;
 }
+
+export const setDateDefaultValue = debounce(
+  (
+    form, 
+    formKey = "created_at", 
+    start_key = "start_at", 
+    end_key = "end_at",
+  ) => {
+    const search = parseLocationSearch(window.location.search);
+    const start_at = search[start_key] ;
+    const end_at   = search[end_key] ;
+    const initValue = form.getFieldValue(formKey);
+    // console.log(form.getFieldValue(start_key))
+    // console.log(form.getFieldValue(end_key))
+    // console.log(initValue);
+    if(start_at && end_at && isString(initValue)){
+      form.setFieldsValue({[formKey]: [ moment(start_at), moment(end_at) ]});
+    }
+}, 800)
 
 export function createDownload(url){
   let a = document.createElement('a');
@@ -181,3 +204,4 @@ export function  arrayMove(arr, oldIndex, newIndex) {
   arrCp.splice(newIndex, 0, ...moveItem);
   return arrCp;
 }
+

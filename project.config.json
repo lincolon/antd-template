@@ -1,5 +1,5 @@
 {
-    "name": "管理后台",
+    "name": "",
     "theme": {
         "@primary-color": "#2F80ED",
         "@link-color": "#2F80ED",
@@ -15,8 +15,9 @@
     },
     "development": {
         "host": "",
-        "server_port": "8899"
+        "server_port": "9999"
     },
     "token_name": "",
-    "page_size": 20
+    "page_size": 20,
+    "map_key": ""
 }

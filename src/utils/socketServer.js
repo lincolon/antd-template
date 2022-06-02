@@ -2,7 +2,8 @@ import {
   notification,
 } from 'antd';
 
-import {isFunction, isEmpty} from 'lodash-es';
+import isFunction from 'lodash-es/isFunction';
+import isEmpty from 'lodash-es/isEmpty';
 import { sleep } from "./helper";
 
 const RECONNECTCOUNT = 10;

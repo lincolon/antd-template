@@ -1,0 +1,128 @@
+.tree-wrapper{
+	overflow-y: auto;
+}
+
+.tree-menus-wrapper{
+    width: 100%;
+    padding: 10px 0;
+    .tree-menu-item{
+        display: block;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        &:hover{
+            background-color: #0099FF;
+            color: #fff
+        }
+    }
+}
+
+.tree-menu{
+    position: relative;
+    transition: height 0.2s ease-in-out;
+    .tree-line{
+        position: absolute;
+        width: 1px;
+        border: 1px dashed rgb(153,153,153);
+        top: 20px;
+        left: 28px;
+        transform: scaleX(0.5);
+        z-index: 1;
+    }
+}
+.top-level{
+    position: relative;
+    &.child-level{
+        .tree-item{
+            overflow: hidden;
+        }
+    }
+}
+.tree-item{
+    position: relative;
+    height: 40px;
+    transition: background .3s ease-in-out;
+    cursor: pointer;
+    // z-index: 2;
+    border-left: 4px solid transparent;
+    div, span{
+        color: rgb(51, 51, 51);
+    }
+    &:hover{
+        div, span{
+            // color: #fff;
+        }
+        background-color: #0099ff31;
+        border-left-color:  #0099FF;
+    }
+    &.active{
+        div, span{
+            color:  rgb(51, 51, 51);
+        }
+        background-color: #EFF5FF;
+        border-left-color:  #0099FF;
+    }
+    .project-icon{
+        position: relative;
+        z-index: 10;
+        width: 18px;
+        height: 20px;
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+        margin: 0 5px;
+    }
+    .tree-icon{
+        position: relative;
+        z-index: 10;
+        width: 20px;
+        height: 20px;
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+        // margin-right:5px;
+    }
+    .tree-icon-flat{
+        background-image: url('../../assets/flat.png');
+    }
+    .tree-icon-unflat{
+        background-image: url('../../assets/unflat.png');
+    }
+    .tree-icon-empty{
+        background-image: url('../../assets/zero.png');
+    }
+    .tb-cell{
+        padding: 0 10px;
+    }
+    .tree-title{
+        max-width: 160px;
+        // margin-left: 8px;
+        margin-right: 5px;
+        line-height: 40px;
+    }
+}
+.child-level{
+    overflow: hidden;
+    .icon-prefix{
+        position: relative;
+        &:after{
+            position: absolute;
+            content: '';
+            left: -16px;
+            width: 16px;
+            height: 1px;
+            border: 1px dashed rgb(153,153,153);
+            transform: scaleY(0.5);
+            z-index: 0
+        }
+    }
+}
+.tags-icon{
+    display: inline-flex;
+    width: 20px;
+    height: 20px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin-right: 5px;
+}

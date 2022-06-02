@@ -6,6 +6,8 @@ import Cookie from 'js-cookie';
 
 import projectConfig from '../../project.config.json';
 
+import { refreshToken } from '../service/common';
+
 const env = process.env.NODE_ENV === "development" ? "development" : "production"
 const hostApi = projectConfig[env].host;
 
@@ -49,10 +51,12 @@ export default function initRequest(){
 
   axios.interceptors.request.use(function (config) {
     // 在发送请求之前做些什么
-    const authorization = {};
+    const authorization = {
+      Authorization: config.headers?.authorization
+    };
 
     if(config.url.indexOf('/login') === -1){
-      authorization["Authorization"] = Cookie.get(projectConfig.token_name)
+      authorization["Authorization"] = `Bearer ${Cookie.get(projectConfig.token_name)}`;
     }
 
     if(requestQueen.isLoading(config.url))return;
@@ -75,23 +79,28 @@ export default function initRequest(){
     };
   });
 
-  axios.interceptors.response.use(function (response) {
+  axios.interceptors.response.use(async function (response) {
     // 2xx 范围内的状态码都会触发该函数。
     // 对响应数据做点什么
 
     const {code, msg} = response.data;
-    const { config, headers } = response;
-
-    if(headers['authorization']){
-      Cookie.set(projectConfig.token_name, headers['authorization'])
-    }
+    const { config } = response;
    
     requestQueen.remove(config.url);
     NProgress.done();
     
-    if(code === 402){
+    if(+code === 403){
       location.replace('/login');
-    } else if(code !== 0) {
+    } else if(+code === 402) {
+      console.log(config)
+      const {data: { access_token }} =  await refreshToken();
+      Cookie.set(projectConfig.token_name, access_token);
+      axios.post(config.url, config.data, {
+        headers: {
+          Authorization: access_token
+        }
+      });
+    }else if(+code !== 0) {
       notification.error({
         message: msg
       })

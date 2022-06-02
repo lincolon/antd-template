@@ -49,7 +49,7 @@ function getSelectedKey(pathname, config) {
         activeKeys = res;
         break;
       }
-    }else if(pathname.indexOf(item.path) > -1){
+    }else if(pathname === `/${item.path}`){
       activeKeys.push(item.key);
       break;
     }
@@ -63,22 +63,24 @@ const routesConfig = getMenuConfig(routes);
 export default function NavMenu({menuCollapsed}) {
 
   const { pathname } = useLocation();
+  console.log(pathname);
 
   const defaultSelectedKeys = getSelectedKey(pathname, routesConfig);
 
   const defaultOpenKeys = !menuCollapsed ? routesConfig.map(item => item.key) : [];
 
-  const appendProps = isSmallMedia() ? {} : {expandIcon: () => null};
+  // const appendProps = isSmallMedia() ? {} : {expandIcon: () => null};
+  console.log(defaultSelectedKeys)
 
   return (
     <Menu
-      theme="dark"
+      theme="light"
       mode="inline"
       defaultSelectedKeys={defaultSelectedKeys} 
       defaultOpenKeys={defaultOpenKeys} 
       onClick={() => false}
-      inlineIndent={10}
-      {...appendProps}
+      // inlineIndent={10}
+      // {...appendProps}
     >
       {
         routesConfig.map((item) => {
@@ -88,7 +90,7 @@ export default function NavMenu({menuCollapsed}) {
           return (item.children && item.children.length > 0) ? (
             <SubMenu 
               key={item.key}
-              title={<span style={{color: '#fff'}}>{item.icon}<span>{item.label}</span></span>}
+              title={<span>{item.icon}<span>{item.label}</span></span>}
             >
               {
                 item.children.map((item) => {

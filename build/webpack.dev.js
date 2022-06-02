@@ -1,4 +1,5 @@
 const merge = require('webpack-merge').merge;
+const webpack = require('webpack');
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 
 const common = require('./webpack.default.js');
@@ -10,6 +11,7 @@ module.exports = merge(common, {
     devServer: {
         static: './dist',
         port: devPort,
+        host: '0.0.0.0',
         hot: true,
         // liveReload: true,
         historyApiFallback: true,

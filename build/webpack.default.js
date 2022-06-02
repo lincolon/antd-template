@@ -26,6 +26,10 @@ module.exports = {
             '@service': path.join(__dirname, '../src/service'),
         }
     },
+    externals: {
+        "QQMap": "window.qq.maps",
+        "@antv/g6": "window.G6",
+    },
     module: {
         rules: [
             {
@@ -118,6 +122,9 @@ module.exports = {
         }),
         new HtmlWebpackPlugin({
             title: projectConfig.name,
+            mapKey: projectConfig.map_key,
+            inject: 'head',
+            favicon: path.resolve(__dirname, '..', 'public/favico.png'),
             template: path.resolve(__dirname, '..', 'public/index.ejs')
         }),
     ]

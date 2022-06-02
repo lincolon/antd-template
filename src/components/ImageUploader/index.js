@@ -6,7 +6,6 @@ import {
 import {
   PlusSquareFilled
 } from '@ant-design/icons';
-import {isEqual} from 'lodash-es';
 
 import './style.less';
 

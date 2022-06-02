@@ -1,123 +1,45 @@
-import axios from 'axios';
-import { notification } from 'antd'
-import NProgress from 'nprogress';
-import Cookie from 'js-cookie';
-// import qs from 'qs';
+import React, { useRef, useEffect } from 'react';
 
-import projectConfig from '../../project.config.json';
+import { useSearchParams } from 'react-router-dom';
 
-const env = process.env.NODE_ENV === "development" ? "development" : "production"
-const hostApi = projectConfig[env].host;
+import { parseUrlSearchParams } from '../../utils/helper';
 
-const requestQueen = {
-  data: [],
-  isLoading: function(url) {
-    return this.data.indexOf(url) > -1;
-  },
-  push: function(url) {
-    this.data.push(url)
-  },
-  remove: function(url){
-    const idx = this.data.indexOf(url);
-    if(idx > -1){
-      this.data.splice(idx, 1);
-    }
-  }
-}
+export default function withTableList(Comp, service){
 
-function createPostData(data, method){
-  let _data = data;
-  if(method.toUpperCase() === 'POST'){
-    _data = qs.stringify(_data);
-  }
-  return _data;
-}
+  return function() {
+    let [searchParams, setSearchParams] = useSearchParams();
+    const searchFormValues = parseUrlSearchParams(searchParams);
+    const formRef = useRef();
 
-function dataFormatter(data) {
-  if(!data)return {};
-  let res = data;
-  if(data['withFile']){
-    res = new FormData();
-    for(const k in data){
-      res.append(k, data[k])
-    }
-  }else if(data.pageSize){
-    res.page = data.current;
-    res.page_size = data.pageSize;
-    delete res.current;
-    delete res.pageSize;
-  }
-  return res
-}
-
-export default function initRequest(){
-
-  axios.defaults.baseURL = hostApi;
-  axios.defaults.timeout = 60000;
-
-  axios.interceptors.request.use(function (config) {
-    // 在发送请求之前做些什么
-    const authorization = {};
-
-    if(config.url.indexOf('/login') === -1){
-      authorization["Authorization"] = Cookie.get(projectConfig.token_name)
-    }
-
-    if(requestQueen.isLoading(config.url))return;
-
-    requestQueen.push(config.url);
-    NProgress.start();
-
-    return {
-      ...config,
-      data: dataFormatter(config.data),
-      headers: {
-        common: {
-          ...config.headers.common,
-          ...authorization
+    const tableProps = {
+        rowKey: "id",
+        formRef,
+        searchFormValues,
+        search: {labelWidth: 'auto', span: 6},
+        pagination: {
+          pageSize: 20,
+          defaultCurrent: searchFormValues.page || 1,
         },
-        post: {
-          'Content-Type': (!config.data || !config.data.withFile) ? 'application/json; charset=utf-8' : 'multipart/form-data; charset=utf-8'
+        defaultSize: "small",
+        onSubmit: (params) => {
+          setSearchParams({...params, page: 1})
+        },
+        onReset: () => {
+          setSearchParams({page:1});
+          formRef.current.resetFields()
+        },
+        onChange: (pagination) => {
+          setSearchParams({...searchFormValues, page: pagination.current});
+        },
+        request:async (params = {}) => {
+          return await service({...params, ...searchFormValues, current: searchFormValues.page || 1})
         }
-      }
-    };
-  });
-
-  axios.interceptors.response.use(function (response) {
-    // 2xx 范围内的状态码都会触发该函数。
-    // 对响应数据做点什么
-
-    const {code, msg} = response.data;
-    const { config, headers } = response;
-
-    if(headers['authorization']){
-      Cookie.set(projectConfig.token_name, headers['authorization'])
-    }
-   
-    requestQueen.remove(config.url);
-    NProgress.done();
-    
-    if(code === 402){
-      location.replace('/login');
-    } else if(code !== 0) {
-      notification.error({
-        message: msg
-      })
-      return Promise.reject({code, message: msg, url: config.url});
     }
 
-    return {
-      success: true,
-      data: response.data.data,
-      total: response.data.page.total,
-      extra: response.data.extra
-    };
-  }, function (error) {
-    
-    NProgress.done();
-    if(error.url){
-      requestQueen.remove(config.url);
-    }
-    return Promise.reject(error);
-  });
+    useEffect(() => {
+      formRef.current && formRef.current.setFieldsValue(searchFormValues);
+    }, [])
+
+    return <Comp {...tableProps} />
+  }
 }

@@ -20,7 +20,7 @@ cities.forEach((city) => {
     matchProvince.children.push({
       label: city.name,
       value: city.name,
-      // children: city.children,
+      children: city.children,
     });
   }
 });
@@ -30,5 +30,11 @@ const areaOptions = provinces.map(province => ({
   value: province.name,
   children: province.children,
 }));
+
+export const cityOptions = provinces.map(province => ({
+  label: province.name,
+  value: province.name,
+  children: province.children.map(item => ({label: item.label, value: item.value})),
+}))
 
 export default areaOptions;

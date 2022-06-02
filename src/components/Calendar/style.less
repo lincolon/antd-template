@@ -1,0 +1,103 @@
+.date-item{
+    position: relative;
+    text-align: center;
+    height: 6vh;
+    padding: 5px;
+    box-sizing: border-box;
+    font-size: 14px;
+    .val{
+        width: 32px;
+        height: 32px;
+        margin: 0 auto;
+        font-weight: bold;
+        color: #555;
+        display: -webkit-box;
+        -webkit-box-align: center;
+        -webkit-box-orient: vertical;
+        -webkit-box-pack: center;
+        cursor: pointer;
+        &.today{
+            background-color: #e2e2e2;
+            font-weight: bolder;
+            border-radius: 100%;
+        }
+        &.active,
+        &.hasplan{
+            font-weight: bolder;
+            border-radius: 100%;
+            box-shadow: 0px 2px 7px 0px rgba(0,0,0,0.23);
+            color: #fff !important;
+        }
+        &.active{
+            background-color: #ff4c3f !important;
+        }
+        &.hasplan{
+            background-color: #03a9f4;
+            box-shadow: none;
+            &.overdate{
+                background-color: #d5dde0;
+                color: #333;
+            }
+        }
+        &.light{
+            color: #fff !important;
+            opacity: 0;
+        }
+    }
+    .flag{
+        position: absolute;
+        width: 16px;
+        height: 4px;
+        border-radius: 4px;
+        background-color: #35c791;
+        bottom: -3px;
+        left: 50%;
+        margin-left: -8px;
+        &.active{
+            background-color: #35c791;
+        }
+    }
+    .count-tag{
+        position: absolute;
+        top: 0px;
+        right: 5px;
+        background-color: #607d8b;
+        color: #fff;
+        font-size: 12px;
+        padding: 2px 6px;
+        line-height: 1;
+        border-radius: 10px;
+        border-bottom-left-radius: 0px;
+        &.light{
+            background-color: #ff9800;
+        }
+    }
+    .status-icon{
+        position: absolute;
+        bottom: -8px;
+        right: 24px;
+        font-size: 18px;
+    }
+}
+
+.calendar-header{
+    padding-bottom: 24px;
+    .calendar-nav{
+        text-align: center;
+    }
+}
+
+.header-date-item{
+    text-align: center;
+    font-size: 14px;
+    color: #999;
+    font-weight: bold;
+}
+
+.prev_month,
+.next_month{
+    cursor: pointer;
+    width: 50px;
+    text-align: center;
+    line-height: 32px;
+}

@@ -1,8 +1,30 @@
 .cascader-options-wrapper{
     margin-top: 20px;
+    padding-left: 20px;
 }
 
-.cascader-wrapper{width: 200px}
+.cascader-wrapper{
+    // padding-top: 14px;
+    // padding-left: 18px;
+    // background-color: #f3f3f3;
+    // border-radius: 6px;
+    // margin-top: 8px;
+    border-bottom: 1px solid #ececec;
+    .city-item{
+        margin-right: 18px;
+        margin-bottom: 14px;
+        font-size: 18px;
+        line-height: 1;
+        cursor: pointer;
+        &:hover{
+            color: #2F80ED;
+        }
+        &.active{
+            color: #2F80ED;
+            font-weight: bolder;
+        }
+    }
+}
 
 .tree-wrapper{
     .tree-item{
@@ -21,6 +43,9 @@
             }
         }
         .tree-node{
+            margin-bottom: 10px;
+        }
+        .tree-node-padd{
             padding-left: 20px;
         }
     }

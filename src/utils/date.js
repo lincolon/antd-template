@@ -103,6 +103,14 @@ export const firstDateOfMonth = function(date) {
   return new Date(year, month, 1);
 };
 
+//当月最后一天
+export const lastDateOfMonth = function(date) {
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const days = getDayCountOfMonth(year, month)
+  return new Date(year, month, days);
+};
+
 //格式化为本土时间
 export const toLocalDateString = (date) => {
   return date.toLocaleDateString().replace(/\//g, "-")
