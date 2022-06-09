@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import storage from 'localforage';
 import App from './pages/index';
 import '@modules/nprogress/nprogress.css'; 
-import '@modules/antd/dist/antd.less';
+import '@modules/antd/dist/antd.css';
 import './global.less'
 
 import projectConfig from '../project.config.json'
