@@ -12,6 +12,14 @@ module.exports = merge(common, {
             new TerserPlugin({
                 // minify: TerserPlugin.swcMinify,
                 extractComments: false,
+                terserOptions:{
+                    cache: true,
+                    parallel: true,
+                    sourceMap: false,
+                    compress:{
+                      drop_console: true,          
+                    }           
+                },
             }),
         ]
     },
